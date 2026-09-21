@@ -1,5 +1,5 @@
 ---
-
+const pageTitle = "Inicio";
 ---
 
 <html lang="es">
@@ -9,13 +9,13 @@
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Tutorial Astro</title>
+		<title>{pageTitle}</title>
 	</head>
 	<body>
 		<a href="/">Inicio</a>
 		<a href="/about/">Sobre mi</a>
 		<a href="/blog/">Blog</a>
 
-		<h1>Un, dos, tres, ale, ale, ale</h1>
+		<h1>{pageTitle}</h1>
 	</body>
 </html>
