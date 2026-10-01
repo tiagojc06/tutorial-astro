@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogPost from '../../components/BlogPost.astro';
+
+const allPosts = Object.values(import.meta.glob('../posts/*.md', { eager: true }));
+const uniqueTags = [...new Set(allPosts.map((post: any) => post.frontmatter.tags).flat())];
+
+const pageTitle = "Índice de etiquetas";
+
+---
+<BaseLayout pageTitle={pageTitle}>
+    <ul class="tags">
+        {uniqueTags.map((tag: string) => <BlogPost url={`/tags/${tag}`} title={tag} />)}
+    </ul>
+</BaseLayout>
+<style is:global>
+    .tags {
+        display: flex;
+        flex-wrap: wrap;
+        list-style: none;
+    }
+
+    .tags a {
+        color: #00539F;
+    }
+
+    .tags li {
+        margin: 0.25em;
+        border: dotted 1px #a1a1a1;
+        border-radius: .5em;
+        padding: .5em 1em;
+        font-size: 1.15em;
+        background-color: #F8FCFD;
+    }
+</style>

@@ -1,5 +1,6 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+import BlogPost from '../components/BlogPost.astro';
 import { Image } from 'astro:assets';
 const { frontmatter } = Astro.props;
 ---
@@ -9,5 +10,37 @@ const { frontmatter } = Astro.props;
     <p>Escrito por {frontmatter.author}</p>
     <Image src={frontmatter.image.url} alt={frontmatter.image.alt} width={800} height={600} />
     <slot />
-    <p>Etiquetas: <strong>{frontmatter.tags.join(', ')}</strong></p>
+    <ul class="tags">
+        {frontmatter.tags.map((tag: string) => <BlogPost url={`/tags/${tag}`} title={tag} />)}
+    </ul>
 </BaseLayout>
+{/* Explicación a error pasado: Me preguntaba por qué estos estilos afectaban a `/blog` y `/tags/[tag]` si ni siquiera usaban esta plantilla en esos archivos, la respuesta era que en los archivos importaba y procesaba ansiosamente todos los archivos MD mediante `import.meta.glob` con `eager: true`, por lo tanto, como los MD importaban esta plantilla, `/blog` y `/tags/[tag]` también la importaban y se aplicaban sus estilos. La solución fue simplemente agregar la clase `tags` a los elemento `ul` donde quería que se aplicaran los estilos. 
+
+Esta es la cadena invisible que ocurre por detrás:
+
+1. `blog.astro` importa `post-4.md`.
+2. `post-4.md` dice en su frontmatter: `layout: ../../layouts/MarkdownPostLayout.astro`, así que Astro importa ese layout.
+3. Al importar ese layout, Astro lee el `is:global` que pusiste ahí.
+4. Astro asume: "Como `blog.astro` importó los posts, y los posts importaron el layout, entonces el layout es parte de la página `blog.astro`".
+
+En consecuencia, Astro inyecta esos estilos globales en tu página del blog, a pesar de que no hayas envuelto el contenido de `blog.astro` con esa plantilla. */}
+<style is:global>
+    .tags {
+        display: flex;
+        flex-wrap: wrap;
+        list-style: none;
+    }
+
+    .tags a {
+        color: #00539F;
+    }
+
+    .tags li {
+        margin: 0.25em;
+        border: dotted 1px #a1a1a1;
+        border-radius: .5em;
+        padding: .5em 1em;
+        font-size: 1.15em;
+        background-color: #F8FCFD;
+    }
+</style>
