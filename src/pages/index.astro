@@ -1,8 +1,15 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Greeting from '../components/Greeting';
 const pageTitle = "Inicio";
 ---
 
 <BaseLayout pageTitle={pageTitle}>
 	<h2>Mi impresionante subtítulo del blog</h2>
+	{/* Componente hidratado mediante client:load, permite interacción con el usuario después de que la página se cargue 
+	- client:load envía el JavaScript del componente tan pronto como la página se cargue. 
+	- client:visible sólo enviará el JavaScript del componente cuando sea visible en la página.
+	De forma predeterminada, un componente de framework no está hidratado en el cliente. Si no se proporciona la directiva client:*, su HTML se representa en la página sin JavaScript.
+	Una directiva de cliente puede ser usada solamente en un componente de framework UI (React, Preact, Vue, etc.) que sea directamente importado en un componente .astro. */}
+	<Greeting client:load messages={["Hej", "Hallo", "Hola", "Habari", "Tangamandapio"]} />
 </BaseLayout>
